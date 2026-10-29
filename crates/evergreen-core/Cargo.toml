@@ -7,9 +7,14 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+# No `homepage` yet: it would repeat `repository`. Set it to the mdBook URL
+# once the book is deployed.
+documentation = "https://docs.rs/evergreen-core"
 readme = "README.md"
 keywords = ["soroban", "stellar", "storage", "ttl", "smart-contracts"]
-categories = ["no-std"]
+categories = ["no-std", "cryptography::cryptocurrencies", "wasm"]
+# Soroban test snapshots are for this repository's tests, not for users.
+exclude = ["test_snapshots/"]
 
 [dependencies]
 soroban-sdk = { workspace = true }
