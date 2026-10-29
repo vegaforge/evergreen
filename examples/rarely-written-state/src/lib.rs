@@ -11,6 +11,10 @@
 use evergreen_core::{PersistentStore, TtlPolicy};
 use soroban_sdk::{contract, contractimpl, contracttype, Env};
 
+// Extend once remaining TTL is at or below 17,280 ledgers (about 1 day) and top
+// it back up to 518,400 ledgers (about 30 days). Each top-up buys about 30 days
+// of rent rather than the 180-day mainnet maximum (`stellar network settings`,
+// 2026-10-29), so a record nobody reads is not prepaid for half a year.
 const POLICY: TtlPolicy = match TtlPolicy::new(17_280, 518_400) {
     Ok(policy) => policy,
     Err(_) => panic!("policy constants are invalid"),

@@ -32,7 +32,7 @@ is checked at compile time:
 ```rust
 use evergreen_core::TtlPolicy;
 
-// Extend when remaining TTL drops under ~1 day, push it back to ~30 days.
+// Extend once remaining TTL is at or below ~1 day, push it back to ~30 days.
 // Values are in ledgers, about five seconds each.
 const BALANCE_POLICY: TtlPolicy = match TtlPolicy::new(17_280, 518_400) {
     Ok(policy) => policy,

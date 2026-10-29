@@ -9,9 +9,21 @@
 use evergreen_core::{InstanceStore, PersistentStore, TtlPolicy};
 use soroban_sdk::{contract, contracterror, contractimpl, contracttype, Address, Env};
 
-// Extend balances when they fall under ~1 day of TTL, push them back to ~30
-// days. Values are in ledgers (~5s each) and clamp to the network max at run
-// time. Checked at compile time: a bad policy fails the build.
+// Extend a balance once its remaining TTL is at or below 17,280 ledgers (about
+// 1 day) and top it back up to 518,400 ledgers (about 30 days). Ledgers are
+// about five seconds each, and the target is capped at the network maximum at
+// run time.
+//
+// The target is how far each top-up reaches, not the balance's lifetime. On
+// mainnet a new persistent entry already starts with about 2,073,600 ledgers
+// (`min_persistent_ttl`, about 120 days, read with `stellar network settings`
+// on 2026-10-29), so early reads and writes leave its TTL alone. The policy
+// acts once the balance has decayed to the threshold. Topping up to 30 days
+// rather than the 180-day maximum means an active balance pays a small amount
+// of rent often instead of a large amount once, and a balance nobody uses is
+// not prepaid for half a year.
+//
+// Checked at compile time: a bad policy fails the build.
 const BALANCE_POLICY: TtlPolicy = match TtlPolicy::new(17_280, 518_400) {
     Ok(policy) => policy,
     Err(_) => panic!("balance policy constants are invalid"),

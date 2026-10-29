@@ -5,8 +5,8 @@ use crate::error::EvergreenError;
 /// When and how far to extend an entry's TTL.
 ///
 /// Maps onto the host call `extend_ttl(threshold, extend_to)`: once an entry's
-/// remaining TTL falls below `extend_threshold`, extend it to `extend_to`. Both
-/// are in ledgers, about five seconds each.
+/// remaining TTL is at or below `extend_threshold`, extend it to `extend_to`.
+/// Both are in ledgers, about five seconds each.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct TtlPolicy {
     extend_threshold: u32,
@@ -41,7 +41,7 @@ impl TtlPolicy {
         })
     }
 
-    /// Extend once remaining TTL drops below this.
+    /// Extend once remaining TTL is at or below this many ledgers.
     pub const fn extend_threshold(&self) -> u32 {
         self.extend_threshold
     }
@@ -53,8 +53,16 @@ impl TtlPolicy {
 
     /// Clamp to the network's current max TTL, read live from the ledger.
     ///
-    /// The max is a network parameter and can change on a protocol upgrade.
-    /// Extending past it traps, so the resolved target never exceeds it.
+    /// The max is a network parameter, so it is read with
+    /// `env.storage().max_ttl()` on every call rather than hardcoded.
+    ///
+    /// The host already caps persistent and instance extensions at the max on
+    /// its own, so for those tiers a target past it is not an error. The host
+    /// does return an error in two cases: a temporary entry extended past the
+    /// max, and a threshold above the target. `resolve` caps the target first
+    /// and then keeps the threshold at or below it, so the host call it feeds
+    /// is valid for every tier, and the same policy stays safe for a temporary
+    /// store.
     pub fn resolve(&self, env: &Env) -> ResolvedTtl {
         let max = env.storage().max_ttl();
         let extend_to = min_u32(self.extend_to, max);
@@ -69,7 +77,7 @@ impl TtlPolicy {
 /// A policy clamped to the live network limits.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct ResolvedTtl {
-    /// Extend when remaining TTL is below this many ledgers.
+    /// Extend when remaining TTL is at or below this many ledgers.
     pub threshold: u32,
     /// Extend so the entry lives for this many more ledgers.
     pub extend_to: u32,
