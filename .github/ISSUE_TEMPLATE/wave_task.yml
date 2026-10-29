@@ -1,0 +1,79 @@
+name: Wave task
+description: A scoped task for Drips Wave contributors. Maintainers file these.
+title: "<component>: <what changes>"
+labels: ["wave"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A Wave task should fit one Wave week and one pull request. Contributors
+        comment on the issue to be assigned before starting.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should exist when this is done, in one or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and motivation
+      description: Why it matters, what exists today, and the facts it relies on (with sources).
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: A checklist the reviewer can verify one item at a time.
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Implementation notes
+      description: Pointers to the relevant code, SDK functions, or docs. Optional.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      multiple: true
+      options:
+        - core
+        - monitor
+        - cli
+        - migrate
+        - lint
+        - js
+        - examples
+        - docs
+        - ci
+    validations:
+      required: true
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Complexity
+      options:
+        - Trivial (100 points)
+        - Medium (150 points)
+        - High (200 points)
+    validations:
+      required: true
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Testing and PR requirements
+      description: Every Wave pull request must meet these.
+      options:
+        - label: "`./scripts/preflight.sh` passes (format, clippy with `-D warnings`, check and docs, tests, wasm build)."
+          required: true
+        - label: A release note is added in `docs/release-notes/` for any change under `crates/`, `bindings/` or `examples/`.
+          required: true
+        - label: Tests do not touch the network; RPC responses come from recorded JSON fixtures.
+          required: true
+        - label: The PR body uses the template and includes `Closes #N`.
+          required: true

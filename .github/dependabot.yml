@@ -1,0 +1,47 @@
+# Weekly dependency updates. Grouped so a week's bumps arrive as a few pull
+# requests rather than one per crate. Major versions still come one at a time,
+# because those are the ones that need reading.
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # soroban-sdk and the Stellar crates move together; a split bump does not
+      # build.
+      soroban:
+        patterns:
+          - "soroban-*"
+          - "stellar-*"
+      cargo-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: npm
+    directory: /bindings/evergreen-js
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns:
+          - "*"

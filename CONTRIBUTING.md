@@ -65,6 +65,24 @@ All four must pass. CI runs them on every pull request.
 - Fill in the pull request template. Describe what changed and how you verified
   it.
 
+## Drips Wave contributions
+
+Evergreen takes part in Drips Wave. Issues labelled `wave` are scoped for outside
+contributors, and the same rules apply to every pull request:
+
+- **Get assigned first.** Comment on the issue to ask for it, and wait to be
+  assigned before you start. Pull requests for unassigned issues are not
+  reviewed.
+- **One issue, one pull request.** Keep the change to what the issue asks for.
+  If it grows past one Wave week, say so on the issue so it can be split.
+- **Link the issue.** Put `Closes #N` in the pull request body.
+- **Add a release note** for any change under `crates/`, `bindings/` or
+  `examples/`, in `docs/release-notes/<YYYY-MM-DD>-<topic>.md`.
+- **Pass the preflight.** Run `./scripts/preflight.sh` before you open the pull
+  request. CI runs the same gates.
+- **Ask, do not guess.** Questions about Soroban storage, TTL or RPC behaviour
+  belong on the issue.
+
 ## License
 
 By contributing, you agree that your contributions are licensed under the
