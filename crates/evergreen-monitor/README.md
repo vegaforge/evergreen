@@ -12,8 +12,10 @@ already archived.
 ## Status
 
 Stub. The types in `src/lib.rs` are the intended interface; the methods return
-`MonitorError::NotImplemented`. This is a Phase 2 deliverable. See PRD section
-6.2.
+`MonitorError::NotImplemented`. This is a Phase 2 deliverable, tracked in
+[#1](https://github.com/vegaforge/evergreen/issues/1) to
+[#4](https://github.com/vegaforge/evergreen/issues/4). See the
+[roadmap](../../docs/src/roadmap.md#phase-2-the-off-chain-monitor).
 
 ## Planned dependencies
 

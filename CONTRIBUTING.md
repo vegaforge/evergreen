@@ -19,8 +19,9 @@ without understanding the whole framework:
   contract that depends on Evergreen, so they get the closest review.
 - `crates/evergreen-monitor`, `crates/evergreen-cli`, `crates/evergreen-migrate`,
   and `crates/evergreen-lint` are off-chain crates. Several are still stubs, with
-  typed interfaces and TODO markers that point at the relevant PRD section. Those
-  TODOs are good first issues.
+  typed interfaces and TODO markers that point at the GitHub issue tracking the
+  work. `docs/src/roadmap.md` shows how those issues fit together, and the ones
+  labelled `wave` are open to outside contributors.
 - `examples/` holds working contracts that double as documentation.
 
 ## Setup

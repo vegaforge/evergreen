@@ -11,8 +11,9 @@ interface, or use js-stellar-sdk directly for the read and submit paths.
 ## Status
 
 Stub. The interface in `src/index.ts` mirrors the Rust `evergreen-monitor` crate.
-Every method throws `NotImplementedError` until the bindings are built out. See
-PRD section 6.4 and 8.
+Every method throws `NotImplementedError` until the bindings are built out. See the
+[roadmap](../../docs/src/roadmap.md#typescript-binding) and
+[#14](https://github.com/vegaforge/evergreen/issues/14).
 
 ## Develop
 

@@ -8,8 +8,9 @@ reports its storage version as 1. The companion `evergreen-migrate` engine will
 define a migration to version 2 that reshapes this data, dry-run it to show the
 full diff, and execute it across a Wasm upgrade with a recorded rollback plan.
 
-The migration itself lands with `evergreen-migrate` in Phase 4. See PRD section
-6.3. For now this contract gives that work a concrete v1 to migrate from.
+The migration itself lands with `evergreen-migrate` in Phase 4, tracked in
+[#12](https://github.com/vegaforge/evergreen/issues/12) and
+[#13](https://github.com/vegaforge/evergreen/issues/13). For now this contract gives that work a concrete v1 to migrate from.
 
 ```bash
 cargo test -p migration-demo

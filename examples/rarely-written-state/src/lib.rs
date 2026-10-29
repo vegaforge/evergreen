@@ -6,7 +6,7 @@
 //! it might sit untouched for long stretches, and extend-on-access cannot help
 //! an entry that nothing is accessing. That is the gap the off-chain
 //! `evergreen-monitor` closes: it watches the entry and extends it on a schedule
-//! between accesses. See the crate README and PRD section 6.2.
+//! between accesses. See the crate README and docs/src/roadmap.md.
 
 use evergreen_core::{PersistentStore, TtlPolicy};
 use soroban_sdk::{contract, contractimpl, contracttype, Env};

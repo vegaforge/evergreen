@@ -18,7 +18,8 @@ monitor. It installs as the `evergreen` binary.
 
 Stub. The command surface is wired up with clap and is real; the handlers report
 what each command will do and which crate will do it. Inspection and forecasting
-are Phase 3, upgrade and migration are Phase 4. See PRD section 6.3.
+are Phase 3, upgrade and migration are Phase 4. See the
+[roadmap](../../docs/src/roadmap.md) for the issue behind each command.
 
 ## Try the surface
 

@@ -9,15 +9,16 @@
 //! The dry-run is the safety property. No migration runs without producing the
 //! diff first, the same discipline a database migration tool provides.
 //!
-//! This is a Phase 4 deliverable (PRD section 6.3, 7, 11 and 10). The types
+//! This is a Phase 4 deliverable, tracked in
+//! <https://github.com/vegaforge/evergreen/issues/13>. The types
 //! here are the intended interface; the bodies return
 //! [`MigrationError::NotImplemented`].
 
 /// The storage tier an entry lives in.
 ///
 /// Mirrors `evergreen_core::Tier`. Kept local so the engine does not pull in
-/// the no_std on-chain crate; TODO(PRD 9): unify the two once the shared types
-/// are factored out.
+/// the no_std on-chain crate. Where shared types should live is an open
+/// question in `docs/src/roadmap.md`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Tier {
     Persistent,
@@ -97,7 +98,7 @@ impl MigrationEngine {
 
     /// Compute what a migration would change, without touching the ledger.
     ///
-    /// TODO(PRD 6.3, 7): read current entries, apply each transform in memory,
+    /// TODO(#13): read current entries, apply each transform in memory,
     /// and emit a `Change` per affected entry.
     pub fn dry_run(&self, migration: &Migration) -> Result<DryRunReport, MigrationError> {
         let _ = migration;
@@ -106,8 +107,9 @@ impl MigrationEngine {
 
     /// Execute a migration and return the plan to undo it.
     ///
-    /// TODO(PRD 6.3, 15): decide whether the storage transform shares the Wasm
-    /// upgrade transaction or runs as a sequenced pair behind a guard.
+    /// TODO(#12, #13): sequence the contract's `upgrade` call and its new
+    /// version's guarded `migrate` call. The transform cannot share the upgrade
+    /// invocation; see `docs/src/roadmap.md`.
     pub fn execute(&self, migration: &Migration) -> Result<RollbackPlan, MigrationError> {
         let _ = migration;
         Err(MigrationError::NotImplemented)
@@ -115,7 +117,7 @@ impl MigrationEngine {
 
     /// Apply a rollback plan to undo a migration.
     ///
-    /// TODO(PRD 11): replay the inverse transforms in order.
+    /// TODO(#13): replay the inverse transforms in order.
     pub fn rollback(&self, plan: &RollbackPlan) -> Result<(), MigrationError> {
         let _ = plan;
         Err(MigrationError::NotImplemented)

@@ -42,8 +42,9 @@
 //! }
 //! ```
 //!
-//! See the crate README and the workspace PRD for the wider framework: the
-//! off-chain monitor, the CLI, and the upgrade and migration toolkit.
+//! See the crate README and the [roadmap](https://github.com/vegaforge/evergreen/blob/main/docs/src/roadmap.md)
+//! for the wider framework: the off-chain monitor, the CLI, and the upgrade and
+//! migration toolkit.
 
 mod error;
 mod policy;
