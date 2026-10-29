@@ -25,25 +25,67 @@ without understanding the whole framework:
 
 ## Setup
 
-You need a stable Rust toolchain and the Soroban Wasm target. Current Soroban
-builds contracts for `wasm32v1-none`, not the older `wasm32-unknown-unknown`.
+You need:
 
-```bash
-rustup target add wasm32v1-none
-```
+- Rust through [rustup](https://rustup.rs). The repository pins the toolchain in
+  `rust-toolchain.toml` (Rust 1.91.1 with `rustfmt`, `clippy` and the
+  `wasm32v1-none` target), and rustup switches to it inside the repository.
+  Current Soroban builds contracts for `wasm32v1-none`, not the older
+  `wasm32-unknown-unknown`. If your rustup does not install the pinned
+  toolchain on its own, run `rustup toolchain install` from the repository root.
+- Node.js, at the version in `bindings/evergreen-js/.nvmrc`, for the TypeScript
+  binding. Install its dependencies once per clone or worktree:
+
+  ```bash
+  npm ci --prefix bindings/evergreen-js
+  ```
 
 ## Before you open a pull request
 
-Run the same checks CI runs, from the repository root:
+Run the preflight from the repository root:
 
 ```bash
-cargo fmt --all --check
-cargo clippy --workspace --all-targets -- -D warnings
-cargo test --workspace
-cargo build -p token-with-policy --target wasm32v1-none --release
+./scripts/preflight.sh
 ```
 
-All four must pass. CI runs them on every pull request.
+It runs the same five gates CI runs, in order, and stops at the first failure:
+
+1. Format: `cargo fmt --all -- --check`
+2. Lint: `cargo clippy --workspace --all-targets --locked -- -D warnings`
+3. Typecheck: `cargo check`, `cargo doc` with warnings denied, and `tsc` on the
+   binding
+4. Tests: `cargo test --workspace --locked`
+5. Build: every example for `wasm32v1-none` in release mode, a check that each
+   Wasm file fits the network's contract size limit, and the binding's build
+
+`./scripts/preflight.sh --fast` skips gate 5 when you want a quicker answer.
+
+If your change touches `crates/`, `bindings/`, `examples/` or the root
+`Cargo.toml`, add a release note: copy `docs/release-notes/TEMPLATE.md` to
+`docs/release-notes/<YYYY-MM-DD>-<topic>.md` and fill it in. CI fails without one.
+
+### Git hooks (optional)
+
+The repository ships a [lefthook](https://lefthook.dev) config. With it, each
+commit runs rustfmt on the staged Rust files and each push runs
+`./scripts/preflight.sh --fast`. Install it once per clone:
+
+```bash
+brew install lefthook        # or: npm install --global lefthook
+lefthook install
+```
+
+The hooks only save you a round trip. CI is the gate that decides a merge, and
+the `quality` check must be green.
+
+### Working with AI agents
+
+If you use a coding agent, point it at [AGENTS.md](AGENTS.md). It holds the rules
+agents must follow here: work in a git worktree, write an ADR pair under
+`docs/adr/` and get approval before non-trivial work, fix bugs test-first, never
+mask an error, and pass the preflight. The engineering standards it refers to are
+in `.claude/skills/evergreen-engineering-standards/SKILL.md` and apply to people
+too.
 
 ## Conventions
 
