@@ -1,0 +1,26 @@
+{
+  "name": "@evergreen/js",
+  "version": "0.1.0",
+  "description": "TypeScript bindings for the Evergreen Soroban storage framework.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "soroban",
+    "stellar",
+    "storage",
+    "ttl"
+  ],
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

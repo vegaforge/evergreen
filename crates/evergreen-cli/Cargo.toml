@@ -1,0 +1,21 @@
+[package]
+name = "evergreen-cli"
+description = "Command line tool to inspect, extend, restore, forecast, upgrade, and migrate Soroban storage."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+[[bin]]
+name = "evergreen"
+path = "src/main.rs"
+
+# The command surface is wired up with clap. The handlers are stubs that report
+# what each command will do and which crate will do it.
+[dependencies]
+clap = { workspace = true }
+evergreen-monitor = { path = "../evergreen-monitor" }
+evergreen-migrate = { path = "../evergreen-migrate" }

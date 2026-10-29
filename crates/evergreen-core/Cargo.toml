@@ -1,0 +1,18 @@
+[package]
+name = "evergreen-core"
+description = "Declarative TTL policy and typed storage wrappers for Soroban contracts."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+readme = "README.md"
+keywords = ["soroban", "stellar", "storage", "ttl", "smart-contracts"]
+categories = ["no-std"]
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }

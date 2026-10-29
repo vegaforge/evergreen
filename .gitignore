@@ -1,0 +1,16 @@
+/target
+**/*.rs.bk
+Cargo.lock.bak
+
+# Soroban test snapshots are useful to commit; build artifacts are not.
+**/target/
+
+# Node (TypeScript bindings)
+node_modules/
+bindings/evergreen-js/dist/
+*.tsbuildinfo
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.vscode/

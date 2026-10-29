@@ -1,0 +1,36 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/evergreen-core",
+    "crates/evergreen-monitor",
+    "crates/evergreen-cli",
+    "crates/evergreen-migrate",
+    "crates/evergreen-lint",
+    "examples/token-with-policy",
+    "examples/rarely-written-state",
+    "examples/migration-demo",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.81"
+license = "Apache-2.0"
+repository = "https://github.com/Signor1/evergreen"
+authors = ["Emmanuel Omemgboji (Signor1)"]
+
+[workspace.dependencies]
+soroban-sdk = "26.1.0"
+clap = { version = "4", features = ["derive"] }
+
+# Release profile shared by every contract in the workspace. Soroban enforces a
+# 64KB Wasm size limit, so contracts build for size, not speed.
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true

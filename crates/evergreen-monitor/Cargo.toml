@@ -1,0 +1,14 @@
+[package]
+name = "evergreen-monitor"
+description = "Off-chain monitor that predicts Soroban archival and extends or restores entries before they lapse."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+# Stub crate. The interface below is real; the bodies are not implemented yet.
+# The full monitor will add stellar-rpc-client and stellar-xdr as dependencies.
+[dependencies]

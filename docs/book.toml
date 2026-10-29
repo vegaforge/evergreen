@@ -1,0 +1,10 @@
+[book]
+title = "Evergreen"
+authors = ["Emmanuel Omemgboji"]
+description = "A storage lifecycle, state-archival, and upgrade framework for Soroban."
+language = "en"
+src = "src"
+
+[output.html]
+default-theme = "rust"
+git-repository-url = "https://github.com/Signor1/evergreen"

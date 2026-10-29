@@ -1,0 +1,13 @@
+[package]
+name = "evergreen-lint"
+description = "Lints that flag Soroban storage tier misuse, such as durable data in temporary storage."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+# Stub crate. The interface below is real; the checks are not implemented yet.
+[dependencies]
