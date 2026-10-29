@@ -1,4 +1,4 @@
-use soroban_sdk::testutils::storage::Persistent as _;
+use soroban_sdk::testutils::storage::{Instance as _, Persistent as _};
 use soroban_sdk::testutils::Ledger as _;
 use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
 
@@ -88,6 +88,93 @@ fn persistent_read_keeps_entry_alive() {
         let value: Option<i128> = store.get(&KEY);
         assert_eq!(value, Some(7));
         assert_eq!(env.storage().persistent().get_ttl(&KEY), target);
+    });
+}
+
+// The host extends when the remaining TTL is at or below the threshold
+// (`current_ttl <= threshold` in soroban-env-host's `Storage::extend_ttl`), so a
+// read at exactly the threshold must extend.
+#[test]
+fn persistent_read_extends_at_exact_threshold() {
+    let env = Env::default();
+    let id = env.register(Harness, ());
+    env.as_contract(&id, || {
+        let store = PersistentStore::new(&env, POLICY);
+        store.set(&KEY, &7i128);
+        let target = EXTEND_TO.min(env.storage().max_ttl());
+
+        let start = env.ledger().sequence();
+        env.ledger()
+            .set_sequence_number(start + (target - THRESHOLD));
+        assert_eq!(env.storage().persistent().get_ttl(&KEY), THRESHOLD);
+
+        let value: Option<i128> = store.get(&KEY);
+        assert_eq!(value, Some(7));
+        assert_eq!(env.storage().persistent().get_ttl(&KEY), target);
+    });
+}
+
+// One ledger above the threshold is healthy, so a read leaves the TTL alone.
+#[test]
+fn persistent_read_leaves_ttl_one_above_threshold() {
+    let env = Env::default();
+    let id = env.register(Harness, ());
+    env.as_contract(&id, || {
+        let store = PersistentStore::new(&env, POLICY);
+        store.set(&KEY, &7i128);
+        let target = EXTEND_TO.min(env.storage().max_ttl());
+
+        let start = env.ledger().sequence();
+        env.ledger()
+            .set_sequence_number(start + (target - THRESHOLD - 1));
+        assert_eq!(env.storage().persistent().get_ttl(&KEY), THRESHOLD + 1);
+
+        let value: Option<i128> = store.get(&KEY);
+        assert_eq!(value, Some(7));
+        assert_eq!(env.storage().persistent().get_ttl(&KEY), THRESHOLD + 1);
+    });
+}
+
+// The instance tier goes through the same host check, on the one TTL the
+// whole instance map shares.
+#[test]
+fn instance_read_extends_at_exact_threshold() {
+    let env = Env::default();
+    let id = env.register(Harness, ());
+    env.as_contract(&id, || {
+        let store = InstanceStore::new(&env, POLICY);
+        store.set(&KEY, &42u32);
+        let target = EXTEND_TO.min(env.storage().max_ttl());
+        assert_eq!(env.storage().instance().get_ttl(), target);
+
+        let start = env.ledger().sequence();
+        env.ledger()
+            .set_sequence_number(start + (target - THRESHOLD));
+        assert_eq!(env.storage().instance().get_ttl(), THRESHOLD);
+
+        let value: Option<u32> = store.get(&KEY);
+        assert_eq!(value, Some(42));
+        assert_eq!(env.storage().instance().get_ttl(), target);
+    });
+}
+
+#[test]
+fn instance_read_leaves_ttl_one_above_threshold() {
+    let env = Env::default();
+    let id = env.register(Harness, ());
+    env.as_contract(&id, || {
+        let store = InstanceStore::new(&env, POLICY);
+        store.set(&KEY, &42u32);
+        let target = EXTEND_TO.min(env.storage().max_ttl());
+
+        let start = env.ledger().sequence();
+        env.ledger()
+            .set_sequence_number(start + (target - THRESHOLD - 1));
+        assert_eq!(env.storage().instance().get_ttl(), THRESHOLD + 1);
+
+        let value: Option<u32> = store.get(&KEY);
+        assert_eq!(value, Some(42));
+        assert_eq!(env.storage().instance().get_ttl(), THRESHOLD + 1);
     });
 }
 
