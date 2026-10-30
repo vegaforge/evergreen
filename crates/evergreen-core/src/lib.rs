@@ -9,7 +9,7 @@
 //! # The model
 //!
 //! A [`TtlPolicy`] is a small declarative rule: extend an entry when its
-//! remaining TTL drops below a threshold, and extend it to a target. You attach
+//! remaining TTL is at or below a threshold, and extend it to a target. You attach
 //! a policy to a tier through a store handle:
 //!
 //! - [`PersistentStore`] for data that must survive archival, such as balances.

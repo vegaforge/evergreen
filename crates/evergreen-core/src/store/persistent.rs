@@ -42,8 +42,9 @@ impl<'a> PersistentStore<'a> {
 
     /// Read a value, extending its TTL if it exists.
     ///
-    /// The extension makes a read part of the read-write footprint. Use the raw
-    /// SDK handle if you need a pure read.
+    /// The extension changes the entry's TTL, which costs rent, but the key
+    /// stays in the read-only footprint. Use the raw SDK handle if you need a
+    /// read that never pays for an extension.
     pub fn get<K, V>(&self, key: &K) -> Option<V>
     where
         K: IntoVal<Env, Val>,

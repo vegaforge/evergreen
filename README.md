@@ -25,7 +25,7 @@ Evergreen is the high-level abstraction that learning curve is missing. The goal
 Every Soroban contract touches storage, so the cost of the manual model is paid by the whole developer population, repeatedly. The sharp edges are real:
 
 - **Tier selection has no guardrail.** Put a balance in temporary storage and it can vanish for good. Put ephemeral data in persistent storage and you pay rent on it forever.
-- **TTL extension is easy to forget.** A contract that does not extend its entries will watch them archive. A single CLI extension tops out near 30 days, so long-lived contracts need a recurring process that most teams do not build until something breaks.
+- **TTL extension is easy to forget.** A contract that does not extend its entries will watch them archive. A single extension is capped at the network's maximum TTL. That maximum is a network parameter, not a constant: on 2026-10-29 it was 3,110,400 ledgers (about 180 days) on mainnet, read with `stellar network settings`. Even at the cap, a long-lived contract needs a recurring process, and most teams do not build one until something breaks. See [State archival](docs/src/state-archival.md) for how to read the current limits.
 - **Restoration is fiddly.** Building a restore footprint by hand is error prone, and the failure mode in tests is a host panic.
 - **Upgrades have no migration story.** Upgrading the Wasm is supported. Changing the shape of stored data across that upgrade has no tooling and no safety net.
 - **Cost is opaque.** There is no easy way to see what storage will cost over time or which entries are about to lapse.
@@ -54,7 +54,7 @@ Evergreen has three layers. They are deliberately separable, so a team can adopt
 
 A contract author declares a key's tier and TTL policy once. Reads and writes go through a typed handle that extends the entry's TTL on access, within the declared thresholds. There is no hand-written extension logic in the contract.
 
-The policy is plain data: when remaining TTL drops below a threshold, extend the entry to a target. The handle turns that into the right host call at the right moment, and clamps every extension to the network's live maximum TTL, which it reads from the ledger rather than hardcoding. Extending a healthy entry is a no-op at the host level, so applying the policy on every access is cheap.
+The policy is plain data: when remaining TTL is at or below a threshold, extend the entry to a target. The handle turns that into the right host call at the right moment, and clamps every extension to the network's live maximum TTL, which it reads from the ledger rather than hardcoding. Extending a healthy entry is a no-op at the host level, so applying the policy on every access is cheap.
 
 This is the only layer that has to be Rust: Soroban contracts are `no_std` Rust on `soroban-sdk`. It is also the foundation every other layer builds on, which is why it is the piece that is fully implemented first.
 
@@ -111,7 +111,8 @@ Route a balance through `evergreen-core` and it stays alive on its own:
 use evergreen_core::{PersistentStore, TtlPolicy};
 use soroban_sdk::{Address, Env};
 
-// Extend when under ~1 day of TTL, push back to ~30 days. Checked at compile time.
+// Extend once TTL is at or below ~1 day, top it back up to ~30 days.
+// Values are in ledgers, about five seconds each. Checked at compile time.
 const BALANCE_POLICY: TtlPolicy = match TtlPolicy::new(17_280, 518_400) {
     Ok(policy) => policy,
     Err(_) => panic!("balance policy constants are invalid"),

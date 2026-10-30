@@ -6,7 +6,7 @@ once and never writes TTL extension logic by hand.
 
 ## What it gives you
 
-- `TtlPolicy`: a declarative rule, "extend when remaining TTL drops below X,
+- `TtlPolicy`: a declarative rule, "extend when remaining TTL is at or below X,
   extend to Y", validated at construction.
 - `PersistentStore` and `InstanceStore`: typed handles that apply a policy on
   every read and write.
