@@ -20,7 +20,7 @@ repository = "https://github.com/vegaforge/evergreen"
 authors = ["Emmanuel Omemgboji (Signor1)"]
 
 [workspace.dependencies]
-soroban-sdk = "26.1.0"
+soroban-sdk = "29.0.1"
 clap = { version = "4", features = ["derive"] }
 
 # Release profile shared by every contract in the workspace. Contracts build for
