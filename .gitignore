@@ -14,3 +14,12 @@ bindings/evergreen-js/dist/
 .DS_Store
 .idea/
 .vscode/
+
+# Governance
+# Every branch is checked out under .worktrees/.
+.worktrees/
+# Ship scripts prepared for the maintainer live at the root and are never
+# committed. Root only: scripts/*.sh stays tracked.
+/*.sh
+.env*
+!.env.example

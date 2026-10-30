@@ -1,42 +1,130 @@
 name: CI
 
 on:
+  pull_request:
   push:
     branches: [main]
-  pull_request:
+
+# A newer push to the same branch or pull request cancels the older run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: -D warnings
+  # Keep in step with rust-toolchain.toml. rustup would switch to the file's
+  # version anyway; installing it here makes the install step explicit.
+  RUST_TOOLCHAIN: 1.91.1
+  # The rust-version declared in Cargo.toml.
+  RUST_MSRV: 1.91.0
+  JS_DIR: bindings/evergreen-js
+
+# Actions are pinned to full commit SHAs. The comment names the release.
+# dtolnay/rust-toolchain is pinned on master, which takes the toolchain as an
+# input; its per-version branches are regenerated and can lose old commits.
 
 jobs:
-  check:
-    name: fmt, clippy, test, wasm
+  checks:
+    name: format, lint, typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      # Soroban on recent Rust builds contracts for wasm32v1-none, not
-      # wasm32-unknown-unknown, which soroban-sdk rejects.
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master 2026-10-16
         with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
           components: rustfmt, clippy
           targets: wasm32v1-none
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: bindings/evergreen-js/.nvmrc
+          cache: npm
+          cache-dependency-path: bindings/evergreen-js/package-lock.json
+      - run: npm ci --prefix "$JS_DIR"
+      - name: rustfmt
+        run: cargo fmt --all -- --check
+      - name: clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - name: cargo check
+        run: cargo check --workspace --all-targets --locked
+      - name: rustdoc
+        run: cargo doc --workspace --no-deps --locked
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - name: tsc (JS binding)
+        run: npm --prefix "$JS_DIR" run typecheck
 
-      - uses: Swatinem/rust-cache@v2
+  msrv:
+    name: msrv (cargo check on 1.91.0)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master 2026-10-16
+        with:
+          toolchain: ${{ env.RUST_MSRV }}
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      # `+toolchain` overrides rust-toolchain.toml, so this really builds on
+      # the declared minimum and not on the pinned version.
+      - name: cargo check
+        run: cargo "+$RUST_MSRV" check --workspace --all-targets --locked
 
-      - name: Format
-        run: cargo fmt --all --check
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master 2026-10-16
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          targets: wasm32v1-none
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: cargo test
+        run: cargo test --workspace --locked
 
-      - name: Clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
-
-      - name: Test
-        run: cargo test --workspace
-
-      - name: Build example contracts to wasm
+  build:
+    name: build, wasm size, release notes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # check_release_notes.sh diffs against the base branch.
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master 2026-10-16
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          targets: wasm32v1-none
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: bindings/evergreen-js/.nvmrc
+          cache: npm
+          cache-dependency-path: bindings/evergreen-js/package-lock.json
+      - run: npm ci --prefix "$JS_DIR"
+      - name: wasm build, size check, JS build
         run: |
-          cargo build -p token-with-policy --target wasm32v1-none --release
-          cargo build -p rarely-written-state --target wasm32v1-none --release
-          cargo build -p migration-demo --target wasm32v1-none --release
+          # The preflight's gate 5 on its own, so CI and local runs share
+          # one definition of the build and the size limit.
+          ./scripts/preflight.sh --build-only
+      - name: Release note gate
+        run: STRICT_RELEASE_NOTES=true bash scripts/check_release_notes.sh
+
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    needs: [checks, msrv, tests, build]
+    if: always()
+    steps:
+      - name: Every gate passed
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS"
+          if echo "$NEEDS" | grep -Eq '"result": "(failure|cancelled|skipped)"'; then
+            echo "At least one required job did not succeed."
+            exit 1
+          fi
+          echo ok

@@ -1,0 +1,10 @@
+# The toolchain every contributor and CI job builds with. rustup reads this file
+# and switches to it automatically inside the repository.
+#
+# 1.91.1 is the newest stable release verified against this workspace, and
+# soroban-sdk 26.1.0 needs at least 1.91. Bump it in its own pull request.
+[toolchain]
+channel = "1.91.1"
+components = ["rustfmt", "clippy"]
+targets = ["wasm32v1-none"]
+profile = "minimal"

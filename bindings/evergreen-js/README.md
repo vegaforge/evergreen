@@ -1,4 +1,4 @@
-# @evergreen/js
+# @vegaforge/evergreen-js
 
 Thin TypeScript bindings for Evergreen, so teams running their operational
 tooling in Node can drive the monitor and CLI without rewriting their ops stack
@@ -17,6 +17,6 @@ PRD section 6.4 and 8.
 ## Develop
 
 ```bash
-npm install
+npm ci
 npm run typecheck
 ```

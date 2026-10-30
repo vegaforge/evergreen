@@ -1,8 +1,14 @@
 {
-  "name": "@evergreen/js",
+  "name": "@vegaforge/evergreen-js",
+  "private": true,
   "version": "0.1.0",
   "description": "TypeScript bindings for the Evergreen Soroban storage framework.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vegaforge/evergreen.git",
+    "directory": "bindings/evergreen-js"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

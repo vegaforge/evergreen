@@ -1,0 +1,32 @@
+# Git hooks for Evergreen, managed by lefthook (https://lefthook.dev).
+#
+# Install once per clone:
+#   brew install lefthook     (or: npm install --global lefthook)
+#   lefthook install
+#
+# pre-commit touches only the files being committed and finishes in seconds.
+# pre-push runs the preflight without the wasm build, which CI runs anyway.
+# The hooks are a convenience. CI is the gate that decides a merge.
+
+# glob_matcher below needs 2.0.4 or newer. Older versions skip the jobs
+# silently instead of failing, so refuse to run on them.
+min_version: 2.0.4
+
+# Standard `**` semantics, so "**/*.rs" also matches files at the repository
+# root. The default matcher needs at least one directory level.
+glob_matcher: doublestar
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: rustfmt
+      glob: "**/*.rs"
+      # Hooks can run with a minimal PATH, so add cargo's bin directory.
+      # The edition matches [workspace.package] in Cargo.toml.
+      run: PATH="$HOME/.cargo/bin:$PATH" rustfmt --edition 2021 {staged_files}
+      stage_fixed: true
+
+pre-push:
+  jobs:
+    - name: preflight
+      run: ./scripts/preflight.sh --fast
