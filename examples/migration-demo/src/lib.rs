@@ -5,7 +5,7 @@
 //! reports its storage version as 1. The companion `evergreen-migrate` engine
 //! will define a migration to version 2 that reshapes this data, dry-run it to
 //! show the full diff, and execute it across a Wasm upgrade. See the crate
-//! README and PRD section 6.3.
+//! README and issue #12, which makes this contract upgradeable.
 
 use soroban_sdk::{contract, contractimpl, contractmeta, contracttype, Env, Symbol};
 

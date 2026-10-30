@@ -15,10 +15,16 @@ migration tool provides. Every migration also records a rollback plan.
 ## Status
 
 Stub. The types in `src/lib.rs` are the intended interface; the methods return
-`MigrationError::NotImplemented`. This is a Phase 4 deliverable. See PRD section
-6.3 and 7.
+`MigrationError::NotImplemented`. This is a Phase 4 deliverable, tracked in
+[#12](https://github.com/vegaforge/evergreen/issues/12) and
+[#13](https://github.com/vegaforge/evergreen/issues/13).
 
-## Open question being carried
+## Upgrade and migration sequencing
 
-The safest sequencing of the storage transform relative to the Wasm upgrade
-transaction, same transaction or a guarded pair, is PRD open question 15.
+The storage transform does not run inside the Wasm upgrade call. Only the
+contract can write its own storage, and new Wasm takes effect only after the
+current invocation finishes, so the migration runs through a separate,
+admin-guarded `migrate` entrypoint in the new version. This engine dry-runs the
+transforms and sequences the two calls. The
+[roadmap](../../docs/src/roadmap.md#does-the-storage-transform-share-the-upgrade-transaction)
+explains the model.

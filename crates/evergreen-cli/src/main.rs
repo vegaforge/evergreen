@@ -2,12 +2,18 @@
 //!
 //! The command surface is real and wired to the backing crates. The features
 //! behind each command are not implemented yet; every handler reports what it
-//! will do and which PRD section covers it. See PRD section 6.3 and 10.
+//! will do and which GitHub issue tracks it. The phases are described in
+//! `docs/src/roadmap.md`.
 
 use clap::{Args, Parser, Subcommand};
 
 use evergreen_migrate::{Migration, MigrationEngine};
 use evergreen_monitor::{Cadence, Monitor, MonitorConfig};
+
+// Where the pending messages send users. Each command names the issue that
+// tracks it; `upgrade` has no issue yet, so it points at the roadmap.
+const ISSUES: &str = "https://github.com/vegaforge/evergreen/issues";
+const ROADMAP: &str = "https://github.com/vegaforge/evergreen/blob/main/docs/src/roadmap.md";
 
 #[derive(Parser)]
 #[command(name = "evergreen", version, about = "Keep Soroban storage evergreen.")]
@@ -78,32 +84,32 @@ fn inspect(target: &Target) {
                 println!("{entry:?}");
             }
         }
-        Err(e) => eprintln!("inspect is pending ({e}); see PRD 6.4 and 7.4"),
+        Err(e) => eprintln!("inspect is pending ({e}); tracked in {ISSUES}/5"),
     }
 }
 
 fn extend(target: &Target) {
     match monitor(target).extend_due() {
         Ok(keys) => println!("extended {} entries", keys.len()),
-        Err(e) => eprintln!("extend is pending ({e}); see PRD 6.2 and 7.2"),
+        Err(e) => eprintln!("extend is pending ({e}); tracked in {ISSUES}/3"),
     }
 }
 
 fn restore(target: &Target) {
     match monitor(target).restore_archived() {
         Ok(keys) => println!("restored {} entries", keys.len()),
-        Err(e) => eprintln!("restore is pending ({e}); see PRD 6.2 and 7.3"),
+        Err(e) => eprintln!("restore is pending ({e}); tracked in {ISSUES}/4"),
     }
 }
 
 fn forecast(target: &Target) {
     let _ = monitor(target);
-    eprintln!("forecast is pending; see PRD 7.4");
+    eprintln!("forecast is pending; tracked in {ISSUES}/6");
 }
 
 fn upgrade(wasm_hash: &str) {
     let _ = wasm_hash;
-    eprintln!("upgrade is pending; see PRD 6.3");
+    eprintln!("upgrade is pending; see {ROADMAP}#phase-3-the-cli");
 }
 
 fn migrate(to_version: u32) {
@@ -113,6 +119,6 @@ fn migrate(to_version: u32) {
     };
     match MigrationEngine::new().dry_run(&migration) {
         Ok(report) => println!("dry-run: {} changes", report.changes.len()),
-        Err(e) => eprintln!("migrate dry-run is pending ({e}); see PRD 6.3"),
+        Err(e) => eprintln!("migrate dry-run is pending ({e}); tracked in {ISSUES}/13"),
     }
 }

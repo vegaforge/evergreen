@@ -10,8 +10,9 @@ that shows up in code review.
 ## Status
 
 Stub. The types in `src/lib.rs` are the intended interface; `TierLint::check`
-returns `LintError::NotImplemented`. This is a Phase 1 deliverable. See PRD
-section 7.1.
+returns `LintError::NotImplemented`. This is a Phase 1 deliverable, tracked in
+[#10](https://github.com/vegaforge/evergreen/issues/10). See the
+[roadmap](../../docs/src/roadmap.md#phase-1-the-tier-lint).
 
 ## Related work
 

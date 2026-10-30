@@ -5,7 +5,8 @@
 //! lapses. These lints turn that from a silent bug into a flagged, visible
 //! choice that shows up in code review.
 //!
-//! This is a Phase 1 deliverable (PRD section 6.1, 7.1 and 10). The types here
+//! This is a Phase 1 deliverable, tracked in
+//! <https://github.com/vegaforge/evergreen/issues/10>. The types here
 //! are the intended interface; [`TierLint::check`] is not implemented yet.
 
 /// How serious a finding is.
@@ -49,7 +50,7 @@ impl std::error::Error for LintError {}
 pub trait TierLint {
     /// Run the lint over the source at `path` and return what it found.
     ///
-    /// TODO(PRD 7.1): parse the source, find storage writes, and flag values
+    /// TODO(#10): parse the source, find storage writes, and flag values
     /// classified as durable that route to the temporary tier without an
     /// explicit override.
     fn check(&self, path: &str) -> Result<Vec<Finding>, LintError>;
