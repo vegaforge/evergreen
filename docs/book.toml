@@ -7,4 +7,4 @@ src = "src"
 
 [output.html]
 default-theme = "rust"
-git-repository-url = "https://github.com/Signor1/evergreen"
+git-repository-url = "https://github.com/vegaforge/evergreen"
