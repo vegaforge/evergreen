@@ -1,0 +1,26 @@
+# cargo-deny configuration, run by the `dependencies` job in
+# .github/workflows/pr-security.yml. It blocks crates from anywhere other than
+# crates.io and crates with security advisories, including RustSec notices of
+# malicious crates. This file is a sensitive path: changing it needs a
+# maintainer's review.
+
+[graph]
+all-features = true
+
+[advisories]
+# Unmaintained crates are reported but do not fail the check; vulnerabilities
+# and malicious-crate notices always fail it.
+unmaintained = "workspace"
+yanked = "deny"
+ignore = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []
+
+[bans]
+multiple-versions = "allow"
+wildcards = "deny"
+allow-wildcard-paths = true

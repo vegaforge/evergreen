@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "knip": "knip --include dependencies,unlisted,binaries,unresolved"
   },
   "keywords": [
     "soroban",
@@ -27,6 +28,7 @@
     "ttl"
   ],
   "devDependencies": {
+    "knip": "6.41.0",
     "typescript": "^5.4.0"
   }
 }

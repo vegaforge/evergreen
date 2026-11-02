@@ -72,8 +72,10 @@ if [ "$RUN_CHECKS" = "true" ]; then
   echo -e "\n${BLUE}[1/5] Format check${NC}"
   cargo fmt --all -- --check
 
-  echo -e "\n${BLUE}[2/5] Lint (clippy, warnings denied)${NC}"
+  echo -e "\n${BLUE}[2/5] Lint (clippy, warnings denied; knip)${NC}"
   cargo clippy --workspace --all-targets --locked -- -D warnings
+  # Knip fails on JS dependencies nothing imports and imports nothing declares.
+  npm --prefix "$JS_DIR" run knip
 
   echo -e "\n${BLUE}[3/5] Typecheck (cargo check, rustdoc, tsc)${NC}"
   cargo check --workspace --all-targets --locked
@@ -82,6 +84,8 @@ if [ "$RUN_CHECKS" = "true" ]; then
 
   echo -e "\n${BLUE}[4/5] Tests${NC}"
   cargo test --workspace --locked
+  # The PR security checks have their own tests (standard library only).
+  PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/security -q
 else
   echo -e "\n${BLUE}[1-4/5] Skipped in --build-only mode${NC}"
 fi
