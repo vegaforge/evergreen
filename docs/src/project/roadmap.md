@@ -27,7 +27,8 @@ Follow-up work on the core:
   [#8](https://github.com/vegaforge/evergreen/issues/8).
 - Measure the resource cost of extend-on-access against raw storage:
   [#9](https://github.com/vegaforge/evergreen/issues/9).
-- Crate metadata for a first crates.io release:
+- Crate metadata for a first crates.io release (done: `evergreen-core` 0.1.0
+  is on [crates.io](https://crates.io/crates/evergreen-core)):
   [#15](https://github.com/vegaforge/evergreen/issues/15).
 
 ## Phase 1: the tier lint
