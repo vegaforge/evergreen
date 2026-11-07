@@ -7,8 +7,7 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
-# No `homepage` yet: it would repeat `repository`. Set it to the mdBook URL
-# once the book is deployed.
+homepage = "https://evergreen-soroban.netlify.app"
 documentation = "https://docs.rs/evergreen-core"
 readme = "README.md"
 keywords = ["soroban", "stellar", "storage", "ttl", "smart-contracts"]

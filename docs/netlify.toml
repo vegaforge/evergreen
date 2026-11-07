@@ -1,0 +1,25 @@
+# Netlify build for the Evergreen book (docs/).
+#
+# In the Netlify UI, set the base directory to docs. Netlify then runs the
+# build here and reads this file. Paths below are relative to docs/.
+#
+# The Netlify build image has no mdBook, so the build downloads a pinned
+# release and checks its SHA-256 before running it. To upgrade, change both the
+# version and the hash; the hash is listed on the release's GitHub page.
+
+[build]
+  publish = "book"
+  command = """
+    set -euo pipefail
+    curl -sSfLo /tmp/mdbook.tar.gz "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+    echo "${MDBOOK_SHA256}  /tmp/mdbook.tar.gz" | sha256sum -c -
+    tar -xzf /tmp/mdbook.tar.gz -C /tmp
+    /tmp/mdbook build
+  """
+
+  # Skip the build when nothing under docs/ changed. Exit code 0 means skip.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- ."
+
+[build.environment]
+  MDBOOK_VERSION = "0.5.4"
+  MDBOOK_SHA256 = "5222beabd3e37dc5be0d18ff99b79058469354db5c220153a1b92db5ba12be89"
