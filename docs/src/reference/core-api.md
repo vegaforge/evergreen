@@ -1,9 +1,8 @@
 # evergreen-core API
 
 Everything `evergreen-core` exports. The crate is `no_std` and depends only on
-`soroban-sdk`. The rustdoc in the
-[source](https://github.com/vegaforge/evergreen/tree/main/crates/evergreen-core/src)
-is the full reference; this page is the overview.
+`soroban-sdk`. The full reference is the rustdoc on
+[docs.rs](https://docs.rs/evergreen-core); this page is the overview.
 
 ## `TtlPolicy`
 

@@ -19,20 +19,22 @@ contract crate next to `soroban-sdk`.
 
 ## Add the dependency
 
-`evergreen-core` is not on crates.io yet, so depend on it from the Git
-repository. It is built against `soroban-sdk` 26:
+`evergreen-core` is published on
+[crates.io](https://crates.io/crates/evergreen-core). It is built against
+`soroban-sdk` 26:
 
 ```toml
 [dependencies]
 soroban-sdk = "26"
-evergreen-core = { git = "https://github.com/vegaforge/evergreen" }
+evergreen-core = "0.1"
 
 [dev-dependencies]
 soroban-sdk = { version = "26", features = ["testutils"] }
 ```
 
 The crate is `no_std`, like every Soroban contract, and adds no dependencies of
-its own beyond `soroban-sdk`.
+its own beyond `soroban-sdk`. Its API documentation is on
+[docs.rs](https://docs.rs/evergreen-core).
 
 ## Check that it builds
 

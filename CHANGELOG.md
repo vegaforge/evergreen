@@ -11,7 +11,8 @@ Each pull request that changes shipped code also adds a detailed note under
 
 ## [0.1.0] - 2026-10-29
 
-Phase 0: the workspace and the on-chain library. Not yet published to crates.io.
+Phase 0: the workspace and the on-chain library. `evergreen-core` 0.1.0 was
+published to crates.io on 2026-11-07; the other crates are not published yet.
 
 ### Added
 
