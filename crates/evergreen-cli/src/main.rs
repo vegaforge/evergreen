@@ -3,7 +3,7 @@
 //! The command surface is real and wired to the backing crates. The features
 //! behind each command are not implemented yet; every handler reports what it
 //! will do and which GitHub issue tracks it. The phases are described in
-//! `docs/src/roadmap.md`.
+//! `docs/src/project/roadmap.md`.
 
 use clap::{Args, Parser, Subcommand};
 
@@ -13,7 +13,7 @@ use evergreen_monitor::{Cadence, Monitor, MonitorConfig};
 // Where the pending messages send users. Each command names the issue that
 // tracks it; `upgrade` has no issue yet, so it points at the roadmap.
 const ISSUES: &str = "https://github.com/vegaforge/evergreen/issues";
-const ROADMAP: &str = "https://github.com/vegaforge/evergreen/blob/main/docs/src/roadmap.md";
+const ROADMAP: &str = "https://evergreen-soroban.netlify.app/project/roadmap.html";
 
 #[derive(Parser)]
 #[command(name = "evergreen", version, about = "Keep Soroban storage evergreen.")]

@@ -26,5 +26,5 @@ contract can write its own storage, and new Wasm takes effect only after the
 current invocation finishes, so the migration runs through a separate,
 admin-guarded `migrate` entrypoint in the new version. This engine dry-runs the
 transforms and sequences the two calls. The
-[roadmap](../../docs/src/roadmap.md#does-the-storage-transform-share-the-upgrade-transaction)
+[roadmap](../../docs/src/project/roadmap.md#does-the-storage-transform-share-the-upgrade-transaction)
 explains the model.

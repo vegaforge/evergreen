@@ -7,7 +7,7 @@ description: Engineering standards for Evergreen, the Soroban storage-lifecycle 
 
 These rules apply to every contributor, human or agent. They are not suggestions.
 `AGENTS.md` holds the governance rules; this file holds the craft rules.
-`docs/src/architecture.md` explains the design for users.
+`docs/src/concepts/architecture.md` explains the design for users.
 
 ## Architecture
 

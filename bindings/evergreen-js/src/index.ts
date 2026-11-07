@@ -5,7 +5,7 @@
  * monitor and CLI without adopting Rust on the ops side. This mirrors the Rust
  * `evergreen-monitor` interface. The methods are not implemented yet; they will
  * call through to the Rust core or to js-stellar-sdk for the read and submit
- * paths. See docs/src/roadmap.md and https://github.com/vegaforge/evergreen/issues/14.
+ * paths. See docs/src/project/roadmap.md and https://github.com/vegaforge/evergreen/issues/14.
  */
 
 /** How often the monitor runs. */

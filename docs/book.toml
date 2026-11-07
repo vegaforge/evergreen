@@ -5,6 +5,25 @@ description = "A storage lifecycle, state-archival, and upgrade framework for So
 language = "en"
 src = "src"
 
+[build]
+# Fail the build when SUMMARY.md names a page that does not exist, instead of
+# quietly creating an empty one.
+create-missing = false
+
 [output.html]
-default-theme = "rust"
+default-theme = "light"
+preferred-dark-theme = "navy"
+site-url = "/"
 git-repository-url = "https://github.com/vegaforge/evergreen"
+edit-url-template = "https://github.com/vegaforge/evergreen/edit/main/docs/{path}"
+
+[output.html.search]
+limit-results = 20
+
+# Pages that moved when the book was split into sections. The old addresses
+# were shared before the move, so they keep working.
+[output.html.redirect]
+"/state-archival.html" = "concepts/state-archival.html"
+"/architecture.html" = "concepts/architecture.html"
+"/getting-started.html" = "getting-started/quick-start.html"
+"/roadmap.html" = "project/roadmap.html"

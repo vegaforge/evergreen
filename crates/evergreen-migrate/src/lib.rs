@@ -18,7 +18,7 @@
 ///
 /// Mirrors `evergreen_core::Tier`. Kept local so the engine does not pull in
 /// the no_std on-chain crate. Where shared types should live is an open
-/// question in `docs/src/roadmap.md`.
+/// question in `docs/src/project/roadmap.md`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Tier {
     Persistent,
@@ -109,7 +109,7 @@ impl MigrationEngine {
     ///
     /// TODO(#12, #13): sequence the contract's `upgrade` call and its new
     /// version's guarded `migrate` call. The transform cannot share the upgrade
-    /// invocation; see `docs/src/roadmap.md`.
+    /// invocation; see `docs/src/project/roadmap.md`.
     pub fn execute(&self, migration: &Migration) -> Result<RollbackPlan, MigrationError> {
         let _ = migration;
         Err(MigrationError::NotImplemented)
