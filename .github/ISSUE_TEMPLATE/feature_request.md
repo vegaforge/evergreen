@@ -13,7 +13,7 @@ What are you trying to do, and where does Evergreen get in the way today?
 ## Proposed solution
 
 What you would like to see. If the feature is already on the
-[roadmap](https://github.com/vegaforge/evergreen/blob/main/docs/src/roadmap.md),
+[roadmap](https://evergreen-soroban.netlify.app/project/roadmap.html),
 link the phase or issue it belongs to.
 
 ## Alternatives considered

@@ -1,28 +1,8 @@
-# Getting started
+# Quick start
 
-This page gets you building with `evergreen-core`, the on-chain library. It is
-the only layer that is fully implemented today.
-
-## Prerequisites
-
-- A stable Rust toolchain.
-- The Soroban Wasm target. Current Soroban builds contracts for `wasm32v1-none`,
-  not the older `wasm32-unknown-unknown`:
-
-  ```bash
-  rustup target add wasm32v1-none
-  ```
-
-## Add the dependency
-
-Inside a Soroban contract crate, depend on `evergreen-core` alongside
-`soroban-sdk`:
-
-```toml
-[dependencies]
-soroban-sdk = "26"
-evergreen-core = { path = "../evergreen/crates/evergreen-core" }
-```
+This page keeps a token balance alive with `evergreen-core`, with no
+hand-written `extend_ttl` call. It assumes you have finished
+[Installation](installation.md).
 
 ## Declare a policy
 
@@ -41,7 +21,8 @@ const BALANCE_POLICY: TtlPolicy = match TtlPolicy::new(17_280, 518_400) {
 ```
 
 If the numbers cannot produce a valid extension, the build fails rather than
-shipping a broken policy.
+shipping a broken policy. [TTL policies](../concepts/ttl-policies.md) explains
+how to pick the numbers.
 
 ## Route storage through a handle
 
@@ -62,9 +43,8 @@ fn credit(env: &Env, who: &Address, amount: i128) {
 
 ## See it end to end
 
-The `examples/token-with-policy` contract is a complete token that keeps its
-balances alive with no hand-written extension logic. Its tests show the entry
-staying alive across a long stretch of ledgers, extended only by ordinary reads.
+The [`token-with-policy`](../examples/token-with-policy.md) example is a complete
+token that keeps its balances alive this way. From a clone of the repository:
 
 ```bash
 cargo test -p token-with-policy
@@ -75,5 +55,7 @@ cargo build -p token-with-policy --target wasm32v1-none --release
 
 `evergreen-core` keeps frequently accessed entries alive. An entry that is
 written once and then left untouched can still lapse, because there is no access
-to extend it. That is the job of the off-chain monitor, which is on the roadmap.
-The `examples/rarely-written-state` contract shows exactly this case.
+to extend it. That is the job of the off-chain monitor, which is on the
+[roadmap](../project/roadmap.md). The
+[`rarely-written-state`](../examples/rarely-written-state.md) example shows
+exactly this case.

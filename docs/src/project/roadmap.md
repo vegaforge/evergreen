@@ -15,7 +15,7 @@ logic by hand.
 
 `evergreen-core` provides `TtlPolicy`, `PersistentStore`, `InstanceStore` and
 `Tier`. Every extension is clamped to the network's live maximum TTL. Version
-0.1.0 is described in the [changelog](https://github.com/vegaforge/evergreen/blob/main/CHANGELOG.md).
+0.1.0 is described in the [changelog](changelog.md).
 
 Follow-up work on the core:
 

@@ -42,7 +42,7 @@
 //! }
 //! ```
 //!
-//! See the crate README and the [roadmap](https://github.com/vegaforge/evergreen/blob/main/docs/src/roadmap.md)
+//! See the crate README and the [roadmap](https://evergreen-soroban.netlify.app/project/roadmap.html)
 //! for the wider framework: the off-chain monitor, the CLI, and the upgrade and
 //! migration toolkit.
 
