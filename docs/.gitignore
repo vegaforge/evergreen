@@ -1,0 +1,2 @@
+# mdBook output (`mdbook build`). Netlify builds it from source.
+book/

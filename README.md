@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  <a href="https://evergreen-soroban.netlify.app"><strong>Documentation</strong></a>
+</p>
+
+<p align="center">
   <a href="#license"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
   <img alt="Status: Phase 0" src="https://img.shields.io/badge/status-Phase%200-green.svg">
   <img alt="Language: Rust" src="https://img.shields.io/badge/language-Rust-orange.svg">
