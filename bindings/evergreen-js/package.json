@@ -28,7 +28,7 @@
     "ttl"
   ],
   "devDependencies": {
-    "knip": "6.41.0",
+    "knip": "6.45.1",
     "typescript": "^5.4.0"
   }
 }
